@@ -1,0 +1,1 @@
+{"name":"jmeter","type":"influxdb","url":"http://influxdb.cinfra-prod.int:8086","access":"proxy","isDefault":true,"database":"jmeter","user":"","password":""}

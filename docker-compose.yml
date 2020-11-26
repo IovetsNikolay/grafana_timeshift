@@ -1,0 +1,35 @@
+version: '3'
+services:
+   grafana:
+     container_name: grafana
+     image: grafana/grafana
+     build: ./grafana
+     user: "104"
+     ports:
+       - "8857:3000"
+     environment:
+       - GF_SECURITY_ADMIN_PASSWORD=admin
+       - GF_SECURITY_ADMIN_USER=admin
+       - GF_AUTH_ANONYMOUS_ENABLED=true
+       - GF_USERS_ALLOW_SIGN_UP=false
+       - GF_USERS_ALLOW_ORG_CREATE=false
+       - GF_INSTALL_PLUGINS=briangann-datatable-panel
+     volumes:
+       - grafana-home:/var/lib/grafana/
+       - grafana-conf:/etc/grafana/
+     restart: always 
+   influxdb-timeshift-proxy:
+     container_name: influxdb-timeshift-proxy
+     image: "node:alpine"
+     user: "node"
+     working_dir: /influxdb-timeshift-proxy/
+     environment:
+       - INFLUXDB=http://influxdb.cinfra-prod.int:8086
+     volumes:
+       - ./influxdb-timeshift-proxy/:/influxdb-timeshift-proxy/
+     expose:
+       - "8989"
+     command: sh -c "npm i -d && npm run start"
+volumes:
+    grafana-home:
+    grafana-conf:
